@@ -1,0 +1,26 @@
+{
+	"name": "kos",
+	"displayName": "vscode-kos",
+	"description": "Kerbal Operating System",
+	"version": "0.0.1",
+	"publisher": "blank",
+	"engines": {
+		"vscode": "^0.10.6"
+	},
+	"categories": [
+		"Languages"
+	],
+	"contributes": {
+		"languages": [{
+			"id": "kos",
+			"aliases": ["Kerbal Operating System", "kos"],
+			"extensions": [".ks"],
+			"configuration": "./kos.configuration.json"
+		}],
+		"grammars": [{
+			"language": "kos",
+			"scopeName": "source.kos",
+			"path": "./syntaxes/kos.tmLanguage"
+		}]
+	}
+}
