@@ -51,14 +51,69 @@ export class KosCompletionItemProvider implements vscode.CompletionItemProvider 
     private lexingStuff : LexingStruct[] = [
         new LexingStruct("NOT", /not/i),
         new LexingStruct("AND", /and/i),
+        
+        new LexingStruct("OR", /or/i),
+        // Some of these elements can't be reused for word completion, as the words are value
+        // This can probably be properly catered for when detecting variables.
+        //new LexingStruct("TRUEFALSE", /true|false
+        //new LexingStruct("COMPARATOR=<>|>=|<=|=|>|<
+        //Instructions tokens
+        new LexingStruct("SET", /set/i),
+        new LexingStruct("TO", /to/i),
+        new LexingStruct("IS", /is/i),
+        new LexingStruct("IF", /if/i),
+        new LexingStruct("ELSE", /else/i),
+        new LexingStruct("UNTIL", /until/i),
+        new LexingStruct("STEP", /step/i),
+        new LexingStruct("DO", /do/i),
+        new LexingStruct("LOCK", /lock/i),
         new LexingStruct("UNLOCK", /unlock/i),
-        new LexingStruct("UNTIL", /until/i)
+        new LexingStruct("PRINT", /print/i),
+        new LexingStruct("AT", /at/i),
+        new LexingStruct("ON", /on/i),
+        new LexingStruct("TOGGLE", /toggle/i),
+        new LexingStruct("WAIT", /wait/i),
+        new LexingStruct("WHEN", /when/i),
+        new LexingStruct("THEN", /then/i),
+        new LexingStruct("OFF", /off/i),
+        new LexingStruct("STAGE", /stage/i),
+        new LexingStruct("CLEARSCREEN", /clearscreen/i),
+        new LexingStruct("ADD", /add/i),
+        new LexingStruct("REMOVE", /remove/i),
+        new LexingStruct("LOG", /log/i),
+        new LexingStruct("BREAK", /break/i),
+        new LexingStruct("PRESERVE", /preserve/i),
+        new LexingStruct("DECLARE", /declare/i),
+        new LexingStruct("DEFINED", /defined/i),
+        new LexingStruct("LOCAL", /local/i),
+        new LexingStruct("GLOBAL", /global/i),
+        new LexingStruct("PARAMETER", /parameter/i),
+        new LexingStruct("FUNCTION", /function/i),
+        new LexingStruct("RETURN", /return/i),
+        new LexingStruct("SWITCH", /switch/i),
+        new LexingStruct("COPY", /copy/i),
+        new LexingStruct("FROM", /from/i),
+        new LexingStruct("RENAME", /rename/i),
+        new LexingStruct("VOLUME", /volume/i),
+        new LexingStruct("FILE", /file/i),
+        new LexingStruct("DELETE", /delete/i),
+        new LexingStruct("EDIT", /edit/i),
+        new LexingStruct("RUN", /run/i),
+        new LexingStruct("ONCE", /once/i),
+        new LexingStruct("COMPILE", /compile/i),
+        new LexingStruct("LIST", /list/i),
+        new LexingStruct("REBOOT", /reboot/i),
+        new LexingStruct("SHUTDOWN", /shutdown/i),
+        new LexingStruct("FOR", /for/i),
+        new LexingStruct("UNSET", /unset/i),
     ];
+    
+    
 
 	public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Thenable<vscode.CompletionItem[]> {      
         return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
             var lexer = new lexxy.Lexer();
-            var allWords : string[] = [];
+            var allWords : string[] = ['TRUE', 'FALSE']; // Adding intial options that don't fit the lexingStuff structure, but are valid for completion
             
             for(var thing in this.lexingStuff){
                 var t = this.lexingStuff[thing];
