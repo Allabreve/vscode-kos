@@ -1,8 +1,8 @@
 {
 	"name": "kos",
-	"displayName": "vscode-kos",
-	"description": "Kerbal Operating System",
-	"version": "0.0.2",
+	"displayName": "Kerbal Operating system",
+	"description": "Highlighting and autocomplete for KerboScript from Kerbal Operating System",
+	"version": "0.0.3",
 	"publisher": "Togusa09",
 	"engines": {
 		"vscode": "^0.10.6"
