@@ -29,7 +29,7 @@
 		"grammars": [{
 			"language": "kos",
 			"scopeName": "source.kos",
-			"path": "./syntaxes/kos.tmLanguage"
+			"path": "./syntaxes/kos.tmlanguage"
 		}]
     },
     "scripts": {
