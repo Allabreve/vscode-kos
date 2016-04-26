@@ -13,7 +13,7 @@
 \s+                         /* skip whitespace */;
 "//".*                      /* ignore comment */;
 
-(PRINT|CLEARSCREEN|SET|EDIT|RUN)\b|[<>!=]"="       { return yytext.toUpperCase(); }
+(PRINT|CLEARSCREEN|SET|TO|EDIT|RUN)\b|[<>!=]"="       { return yytext.toUpperCase(); }
 
 
 (["'])(?:(?=(\\?))\2.)*?\1  return 'STRING';
@@ -24,22 +24,21 @@
 
 /lex
 
-%token SET EDIT
+%token SET EDIT TO
 %unassoc DOT
 
 
-%start SourceElements
+%start Program
 
 %% /* language grammar */
 
 Program 
-    : {{ $$ = ['PROGRAM',{}]; return $$;}}
-    | SourceElements {{$$ = ['PROGRAM',{}, $1]; return $$;}}
+    :  SourceElements {{$$ = ['PROGRAM',{}, $1]; return $$; }}
     ;
 
 SourceElements
-    : Statement {{$$ = ['SourceElem',{}, $1]; return $$;}}
-    | SourceElements Statement {{$$ = prependChild($3, ['SourceElem2',{}, $1, $2]); return $$;}}
+    : Statement {{$$ = ['SourceElem',{}, $1]; }}
+    | SourceElements Statement {{$$ = $1; $1.push( $2 );}}
     ;
 
 Statement
@@ -49,21 +48,31 @@ Statement
         PrintStatement DOT
         |
         ClearStatement DOT
-
     ;
     
 AssignStatement
     :
-        SET ID {{ $$ = ['SET', $2 ] }}
+        SET ID {{ $$ = ['SET', $2 ];  }}
+        | SET ID TO Expression {{ $$ = ['SET', $2, $4 ];  }}
+    ;
+    
+Expression
+    :
+       NUMBER | STRING | ID
     ;
     
 PrintStatement
     : 
-        PRINT STRING {{ $$ = ['PRINT', $2]}}
+        PRINT KsString {{ $$ = ['PRINT', $2];}}
     ;
-    
+       
 ClearStatement
     :
-        CLEARSCREEN {{$$ = ['SourceElem2',{} ] }}
+        CLEARSCREEN {{$$ = ['CLEARSCREEN',{} ]; }}
+    ;
+    
+KsString
+    :
+        STRING {{ $$ = ['STRING', { 'value' : $1, 'pos' : @1}]; }}
     ;
     
