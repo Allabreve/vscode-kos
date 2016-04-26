@@ -14,6 +14,13 @@
 
 /lex
 
+%{
+    function prependChild(node, child){
+      node.splice(2,0,child); 
+      return node;
+    }
+%}
+
 
 %unassoc DOT
 
@@ -22,15 +29,15 @@
 %% /* language grammar */
 
 Program 
-    : 
-    | SourceElements;
+    : {{ $$ = ['PROGRAM',{}]; return $$;}}
+    | SourceElements {{$$ = ['PROGRAM',{}, $1]; return $$;}};
 
 SourceElements
-    : Statement
-    | SourceElements Statement
+    : Statement {$$ = ['SourceElem',{}, $1]; return $$;}}
+    | SourceElements Statement {$$ = ['SourceElem2',{}, $1, $2]; return $$;}}
     ;
 
 Statement
     : 
-        PRINT STRING DOT
+        PRINT STRING DOT { $$ = ['PRINT', $2]}
     ;

@@ -5,7 +5,7 @@
 	"version": "0.0.3",
 	"publisher": "Togusa09",
 	"engines": {
-		"vscode": "^0.10.6"
+		"vscode": "1.0.0"
 	},
     "repository": {
         "type": "git",

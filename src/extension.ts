@@ -3,7 +3,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { KOS_MODE } from './kosMode';
-//import * as lexxy from 'lexxy';
+import KerboScriptAnalyser  from './kerboScriptAnalyzer';
 
 var lexxy = require('lexxy'); 
 
@@ -24,6 +24,11 @@ export function activate(context: vscode.ExtensionContext) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World!');
 	});
+    
+    let analyser = new KerboScriptAnalyser(context.extensionPath);
+    vscode.workspace.onDidChangeTextDocument(event => {
+        analyser.CreateDiagnostics(event.document);
+    });
     
     context.subscriptions.push(vscode.languages.registerCompletionItemProvider(KOS_MODE, new KosCompletionItemProvider(), '.'));
 
