@@ -7,13 +7,13 @@
     };
 %}
 
-
 %lex
+%options case-insensitive
 %%
 \s+                         /* skip whitespace */;
 "//".*                      /* ignore comment */;
 
-(PRINT|CLEARSCREEN|SET|TO|EDIT|RUN|FROM|UNTIL|STEP|DO|WAIT)\b|[<>!=]"="       { return yytext.toUpperCase(); }
+(PRINT|CLEARSCREEN|SET|TO|EDIT|RUN|FROM|UNTIL|STEP|DO|WAIT|LOCAL|IS)\b|[<>!=]"="\i       { return yytext.toUpperCase(); }
 
 
 (["'])(?:(?=(\\?))\2.)*?\1  return 'STRING';
@@ -21,6 +21,8 @@
 [a-zA-Z][a-zA-Z0-9]*        return 'ID';
 "{"                         return 'LBRACE';
 "}"                         return 'RBRACE';
+"+"                         return 'ADD';
+"-"                         return 'SUBTRACT';
 "="                         return 'EQUAL';
 "."                         return 'DOT';
 .                           return 'INVALID';
@@ -28,6 +30,8 @@
 /lex
 
 %token SET EDIT TO
+%token ADD SUBTRACT EQUAL
+
 %unassoc DOT
 
 
@@ -48,6 +52,8 @@ Statement
     : 
         AssignStatement DOT
         |
+        DeclareStatment DOT
+        |
         PrintStatement DOT
         |
         ClearStatement DOT
@@ -56,18 +62,36 @@ Statement
         |
         FromLoopStatement
     ;
-    
+  
+DeclareStatment
+    :
+        LOCAL ID IS Expression
+    ;
+  
 AssignStatement
     :
         SET ID {{ $$ = ['SET', $2 ];  }}
         | SET ID TO Expression {{ $$ = ['SET', $2, $4 ];  }}
     ;
     
-Expression
+ValueType
     :
-       NUMBER | KsString | ID
+    NUMBER 
+    | 
+    KsString 
+    | 
+    ID
     ;
     
+Expression
+    :
+       ValueType
+       |
+       Expression ADD ValueType
+       |
+       Expression SUBTRACT ValueType
+    ;
+        
 PrintStatement
     : 
         PRINT Expression {{ $$ = ['PRINT', $2];}}
